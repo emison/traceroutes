@@ -1,0 +1,17 @@
+#!/bin/bash
+
+#This bash script is designed to find ground station computers on the Spire network
+#Generate an array of ip addresses on local network
+echo "Scaning local network via $1 interface...."
+ip_array=$( arp-scan --interface=$1 --localnet | awk '{ print $1 }' )
+
+#Remove unwanted terms from ip_array
+I=("${ip_array[@]:20:-11}")
+ip_array="${I[@]}"
+
+#Trace routes of all ip addr
+for ip in $ip_array; do
+	
+	#Only one hop seems to be necessary but more hops may resolve more names
+	echo $( traceroute --max-hops=1 $ip )
+done

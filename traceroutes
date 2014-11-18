@@ -1,0 +1,7 @@
+#!/bin/bash
+#Iterate through newtork interface arguments
+for interface in $@; do
+	#Find host on local network via given interface
+	#Ignore results that trace back to the home folder
+	/usr/bin/traceroutes_core $interface | grep --invert-match Desktop 
+done
