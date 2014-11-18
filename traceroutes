@@ -1,6 +1,5 @@
 #!/bin/bash
 for interface in $@; do #interate through network interfaces given
 	#Find host on local network via given interface
-	#Ignore results that trace back to the home folder
-	/usr/bin/traceroutes_core $interface | grep --invert-match Desktop 
+	/usr/bin/traceroutes_core $interface 
 done
