@@ -1,6 +1,5 @@
 #!/bin/bash
 
-#This bash script is designed to find ground station computers on the Spire network
 #Generate an array of ip addresses on local network
 echo "Scaning local network via $1 interface...."
 ip_array=$( arp-scan --interface=$1 --localnet | awk '{ print $1 }' )
