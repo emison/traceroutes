@@ -1,4 +1,15 @@
 #!/bin/bash
+main () {
+	if [ $# == 0 ] ; then
+		find_default_interface
+		traceroutes $default_route #trace routes through default ni
+	else
+		for interface in $@; do #iterate through newtork interfaces
+			traceroutes $interface #traceroutes for each network interface
+		done
+	fi
+}
+
 traceroutes () {
 	echo "Scaning local network via $1 interface...."
 	ip_array=$( arp-scan --interface=$1 --localnet | awk '{ print $1 }' ) #Generate an array of ip addresses on local network
@@ -29,11 +40,4 @@ find_default_interface () {
 	echo "Default $default_route"
 }
 
-if [ $# == 0 ] ; then
-	find_default_interface
-	traceroutes $default_route #trace routes through default ni
-else
-	for interface in $@; do #iterate through newtork interfaces
-		traceroutes $interface #traceroutes for each network interface
-	done
-fi
+main $@ #call the main funtion
