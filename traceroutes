@@ -1,5 +1,16 @@
 #!/bin/bash
-for interface in $@; do #interate through network interfaces given
-	#Find host on local network via given interface
-	/usr/bin/traceroutes_core $interface 
+traceroutes () {
+	echo "Scaning local network via $1 interface...."
+	ip_array=$( arp-scan --interface=$1 --localnet | awk '{ print $1 }' ) #Generate an array of ip addresses on local network
+
+	I=("${ip_array[@]:20:-11}") #Remove unwanted terms from ip_array
+	ip_array="${I[@]}"
+
+	for ip in $ip_array; do	#Trace routes of all ip addr
+		echo $( traceroute --max-hops=1 $ip ) #Only one hop seems to be necessary but more hops may resolve more names
+	done
+}
+
+for interface in $@; do #Iterate through newtork interfaces
+	traceroutes $interface #traceroutes for each network interface
 done
