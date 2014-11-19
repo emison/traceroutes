@@ -11,6 +11,29 @@ traceroutes () {
 	done
 }
 
-for interface in $@; do #Iterate through newtork interfaces
-	traceroutes $interface #traceroutes for each network interface
-done
+find_default_interface () {
+	default_route=''
+	echo "Detecting active network interfaces...."
+	active_interfaces=$( route | awk '{ print $8 }' ) #Generate an array of active interfaces
+
+	echo $active_interfaces
+	for interface in $active_interfaces; do
+        	if [ $interface == wlan0 ] ; then
+                	default_route='wlan0'
+        	else
+                	if [ $interface == eth0 ] ; then
+                        	default_route='eth0'
+                	fi
+        	fi
+	done
+	echo "Default $default_route"
+}
+
+if [ $# == 0 ] ; then
+	find_default_interface
+	traceroutes $default_route #trace routes through default ni
+else
+	for interface in $@; do #iterate through newtork interfaces
+		traceroutes $interface #traceroutes for each network interface
+	done
+fi
