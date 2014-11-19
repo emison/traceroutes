@@ -4,9 +4,13 @@ traceroutes
 
 SYNOPSIS
 
-traceroutes [network interface]
+traceroutes [network interfaces]
 
 DESCRIPTION
 
-Traceroutes is a simple command line utility that leverages arp-scan and traceroute to find devices on the local network. Traceroutes only needs a network interface to find every device on the network and list the host names and ip addresses.
+Traceroutes is a simple command line utility that lists hostnames and ip addresses on a local network. Traceroutes will determine the defualt network interface if not provided one.
 
+DEPENDENCIES
+- arp-scan
+- route
+- traceroute
