@@ -1,8 +1,15 @@
 #!/bin/bash
 main () {
-	if [ $# == 0 ] ; then
-		find_default_interface
-		traceroutes $default_route #trace routes through default ni
+	if [ $# == 0 ] ; then #if no network interfaces were specified trace active interfaces
+		find_active_interfaces
+		if [ $ethernet == true ] ; then
+			traceroutes eth0 #trace routes through wifi
+		fi
+
+		if [ $wifi == true ] ; then
+			traceroutes wlan0 #traceroutes through ethernet
+		fi
+
 	else
 		for interface in $@; do #iterate through newtork interfaces
 			traceroutes $interface #traceroutes for each network interface
@@ -22,22 +29,23 @@ traceroutes () {
 	done
 }
 
-find_default_interface () {
-	default_route=''
-	echo "Determining default network interface"
+find_active_interfaces () {
+	echo "Finding active network interfaces"
 	active_interfaces=$( route | awk '{ print $8 }' ) #Generate an array of active interfaces
-
 	echo $active_interfaces
-	for interface in $active_interfaces; do
-        	if [ $interface == wlan0 ] ; then
-                	default_route='wlan0'
+	
+	wifi=false
+	ethernet=false
+	for interface in $active_interfaces; do #iterate through active interfaces
+        	if [ $interface == wlan0 ] ; then #check if wifi is active
+                	wifi=true
+
         	else
-                	if [ $interface == eth0 ] ; then
-                        	default_route='eth0'
+                	if [ $interface == eth0 ] ; then #check if ethernet is active
+                        	ethernet=true
                 	fi
         	fi
 	done
-	echo "Default network interface $default_route"
 }
 
 main $@ #call the main funtion
