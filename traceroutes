@@ -3,19 +3,20 @@ main () {
 	if [ $# == 0 ] ; then #if no network interfaces were specified trace active interfaces
 		find_active_interfaces
 		if [ $ethernet == true ] ; then
-			traceroutes eth0 #trace routes through wifi
+			traceroutes eth0 #traceroutes through ethernet
+	
+		else
+			if [ $wifi == true ] ; then
+				traceroutes wlan0 #traceroutes through wifi
+			fi
 		fi
-
-		if [ $wifi == true ] ; then
-			traceroutes wlan0 #traceroutes through ethernet
-		fi
-
 	else
 		for interface in $@; do #iterate through newtork interfaces
 			traceroutes $interface #traceroutes for each network interface
 		done
 	fi
 }
+
 
 traceroutes () {
 	echo "Scaning local network through $1 interface"
@@ -29,6 +30,7 @@ traceroutes () {
 	done
 }
 
+
 find_active_interfaces () {
 	echo "Finding active network interfaces"
 	active_interfaces=$( route | awk '{ print $8 }' ) #Generate an array of active interfaces
@@ -37,12 +39,12 @@ find_active_interfaces () {
 	wifi=false
 	ethernet=false
 	for interface in $active_interfaces; do #iterate through active interfaces
-        	if [ $interface == wlan0 ] ; then #check if wifi is active
-                	wifi=true
+		if [ $interface == 'eth0' ] ; then #check if ethernet is active
+			ethernet=true
 
         	else
-                	if [ $interface == eth0 ] ; then #check if ethernet is active
-                        	ethernet=true
+                	if [ $interface == 'wlan0' ] ; then #check if wifi is active
+				wifi=true
                 	fi
         	fi
 	done
