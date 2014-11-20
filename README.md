@@ -12,7 +12,7 @@ Traceroutes is a command line utility that lists hostnames and ip addresses on a
 
 USAGE
 
-Pass wlan0 as an argument to scan through wifi and eth0 to scan through ethernet. Traceroutes will find a network interface if not given one. If both WiFi and ethernet are active, traceroutes will scan ethernet by default.
+Pass wlan0 as an argument to scan through wifi and eth0 to scan through ethernet. Traceroutes will find a network interface if not given one. If both wifi and ethernet are active, traceroutes will scan ethernet by default.
 
 DEPENDENCIES
 - arp-scan
